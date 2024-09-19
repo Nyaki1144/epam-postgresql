@@ -2,12 +2,14 @@ import express from "express";
 import "dotenv/config";
 import actorsRout from "./routes/actors.js";
 import directorsRout from "./routes/directors.js";
+import moviesRout from "./routes/movies.js";
 import { pool } from "./model/db/connetion.js";
 
 const app = express();
 
 app.use("/actors", actorsRout);
 app.use("/directors", directorsRout);
+app.use("/movies", moviesRout);
 
 await pool.connect();
 pool.on("connect", () => {
