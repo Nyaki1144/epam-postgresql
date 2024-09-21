@@ -4,6 +4,7 @@ import actorsRout from "./routes/actors";
 import directorsRout from "./routes/directors";
 import moviesRout from "./routes/movies";
 import genresRout from "./routes/genres";
+import ratingsRout from "./routes/ratings";
 import { pool } from "./model/db/connetion";
 import {
   Actors,
@@ -20,6 +21,7 @@ app.use("/actors", actorsRout);
 app.use("/directors", directorsRout);
 app.use("/movies", moviesRout);
 app.use("/genres", genresRout);
+app.use("/ratings", ratingsRout);
 
 async function init() {
   await pool.connect();
