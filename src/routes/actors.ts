@@ -1,5 +1,11 @@
 import express, { Router } from "express";
-import { getActors, getActor, updateActor, deleteActor, setActor } from "../controller/actorController.js";
+import {
+  getActors,
+  getActor,
+  updateActor,
+  deleteActor,
+  setActor,
+} from "../controller/actorController";
 
 const actorsRout = Router();
 actorsRout.use(express.json());

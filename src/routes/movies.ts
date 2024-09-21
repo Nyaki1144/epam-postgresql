@@ -1,5 +1,11 @@
 import express, { Router } from "express";
-import { getMovies, getMovie, updateMovie, deleteMovie, setMovie } from "../controller/movieController.js";
+import {
+  getMovies,
+  getMovie,
+  updateMovie,
+  deleteMovie,
+  setMovie,
+} from "../controller/movieController";
 
 const moviesRout = Router();
 moviesRout.use(express.json());

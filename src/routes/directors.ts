@@ -1,5 +1,11 @@
 import express, { Router } from "express";
-import { getDirectors, getDirector, updateDirector, deleteDirector, setDirector } from "../controller/directorController.js";
+import {
+  getDirectors,
+  getDirector,
+  updateDirector,
+  deleteDirector,
+  setDirector,
+} from "../controller/directorController";
 
 const directorsRout = Router();
 directorsRout.use(express.json());
