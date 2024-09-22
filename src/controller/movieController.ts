@@ -4,7 +4,7 @@ import { Controller } from "../util/typs";
 export const getMovies: Controller = async (req, res) => {
   try {
     const data = await pool.query(`SELECT * FROM Movies;`);
-    res.status(201).send(data.rows);
+    res.status(201).json(data.rows);
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);
@@ -19,7 +19,9 @@ export const getMovie: Controller = async (req, res) => {
     const data = await pool.query(`SELECT * FROM Movies WHERE Movieid = $1;`, [
       ID,
     ]);
-    res.status(201).send(data.rows);
+    console.log(data);
+
+    res.status(201).json(data.rows);
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);
@@ -32,15 +34,15 @@ export const updateMovie: Controller = async (req, res) => {
   try {
     const ID = req.params.id;
     const data = req.body;
-    const { title, ReleaseYear, DirectorID } = data;
+    const { title, releaseYear, directorid } = data;
 
     const result = await pool.query(
       `UPDATE Movies
-    SET name = $1, nationality = $2, dob = $3
-    WHERE Movieid = $4 RETURNING *;`,
-      [title, ReleaseYear, DirectorID, ID]
+      SET title = $1, ReleaseYear = $2, DirectorID = $3
+      WHERE Movieid = $4 RETURNING *;`,
+      [title, releaseYear, directorid, ID]
     );
-    res.status(201).send(result.rows);
+    res.status(201).json(result.rows);
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);
@@ -55,7 +57,7 @@ export const deleteMovie: Controller = async (req, res) => {
     const data = await pool.query(`DELETE FROM Movies WHERE Movieid = $1;`, [
       ID,
     ]);
-    res.status(201).send(data.rows);
+    res.status(201).json(data.rows);
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);
