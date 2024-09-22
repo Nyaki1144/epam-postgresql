@@ -4,7 +4,7 @@ import { Controller } from "../util/typs";
 export const getGenres: Controller = async (req, res) => {
   try {
     const data = await pool.query(`SELECT * FROM Genres;`);
-    res.status(201).send(data.rows);
+    res.status(201).json(data.rows);
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);
@@ -19,7 +19,7 @@ export const getGenre: Controller = async (req, res) => {
     const data = await pool.query(`SELECT * FROM Genres WHERE Genreid = $1;`, [
       ID,
     ]);
-    res.status(201).send(data.rows);
+    res.status(201).json(data.rows);
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);
@@ -32,15 +32,15 @@ export const updateGenre: Controller = async (req, res) => {
   try {
     const ID = req.params.id;
     const data = req.body;
-    const { title, ReleaseYear, DirectorID } = data;
+    const { genrename } = data;
 
     const result = await pool.query(
       `UPDATE Genres
-    SET name = $1, nationality = $2, dob = $3
-    WHERE Genreid = $4 RETURNING *;`,
-      [title, ReleaseYear, DirectorID, ID]
+        SET genrename = $1
+        WHERE Genreid = $2 RETURNING *;`,
+      [genrename, ID]
     );
-    res.status(201).send(result.rows);
+    res.status(201).json(result.rows);
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);
@@ -55,7 +55,7 @@ export const deleteGenre: Controller = async (req, res) => {
     const data = await pool.query(`DELETE FROM Genres WHERE Genreid = $1;`, [
       ID,
     ]);
-    res.status(201).send(data.rows);
+    res.status(201).json(data.rows);
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);
@@ -79,7 +79,7 @@ export const setGenre: Controller = async (req, res) => {
       [genre]
     );
 
-    res.status(201).send(data);
+    res.status(201).json(data);
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);
