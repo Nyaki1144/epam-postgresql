@@ -4,7 +4,7 @@ import { Controller } from "../util/typs";
 export const getRatings: Controller = async (req, res) => {
   try {
     const data = await pool.query(`SELECT * FROM Ratings;`);
-    res.status(201).send(data.rows);
+    res.status(201).json(data.rows);
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);
@@ -16,11 +16,10 @@ export const getRatings: Controller = async (req, res) => {
 export const getRating: Controller = async (req, res) => {
   try {
     const ID = req.params.id;
-    const data = await pool.query(
-      `SELECT * FROM Ratings WHERE Ratingid = $1;`,
-      [ID]
-    );
-    res.status(201).send(data.rows);
+    const data = await pool.query(`SELECT * FROM Ratings WHERE movieid = $1;`, [
+      ID,
+    ]);
+    res.status(201).json(data.rows);
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);
@@ -31,17 +30,17 @@ export const getRating: Controller = async (req, res) => {
 
 export const updateRating: Controller = async (req, res) => {
   try {
-    const ID = req.params.id;
+    const movieid = req.params.id;
     const data = req.body;
-    const { title, ReleaseYear, DirectorID } = data;
+    const { rating } = data;
 
     const result = await pool.query(
       `UPDATE Ratings
-    SET name = $1, nationality = $2, dob = $3
-    WHERE Ratingid = $4 RETURNING *;`,
-      [title, ReleaseYear, DirectorID, ID]
+    SET rating = $1
+    WHERE movieid = $2 RETURNING *;`,
+      [rating, movieid]
     );
-    res.status(201).send(result.rows);
+    res.status(201).json(result.rows);
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);
@@ -53,10 +52,10 @@ export const updateRating: Controller = async (req, res) => {
 export const deleteRating: Controller = async (req, res) => {
   try {
     const ID = req.params.id;
-    const data = await pool.query(`DELETE FROM Ratings WHERE Ratingid = $1;`, [
+    const data = await pool.query(`DELETE FROM Ratings WHERE movieid = $1;`, [
       ID,
     ]);
-    res.status(201).send(data.rows);
+    res.status(201).json(data.rows);
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);
@@ -80,7 +79,7 @@ export const setRating: Controller = async (req, res) => {
       [rating, movieid]
     );
 
-    res.status(201).send(data);
+    res.status(201).json(data);
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);
