@@ -7,14 +7,12 @@ import genresRout from "./routes/genres";
 import ratingsRout from "./routes/ratings";
 import movieGenresRout from "./routes/movieGenres";
 import { pool } from "./model/db/connetion";
-import {
-  Actors,
-  Directors,
-  Genres,
-  MovieGenres,
-  Movies,
-  Ratings,
-} from "./model/db/tableScripts";
+import { createDirectorsTable } from "./services/director.service";
+import { createActorsTable } from "./services/actor.service";
+import { createMoviesTable } from "./services/movie.service";
+import { createRatingTable } from "./services/rating.service";
+import { createGenreTable } from "./services/genre.service";
+import { createMovieGenresTable } from "./services/movieGenres.service";
 
 const app = express();
 
@@ -32,12 +30,12 @@ async function init() {
     console.log("Connected to the database");
   });
 
-  await pool.query(Directors);
-  await pool.query(Actors);
-  await pool.query(Genres);
-  await pool.query(Movies);
-  await pool.query(Ratings);
-  await pool.query(MovieGenres);
+  await createDirectorsTable();
+  await createActorsTable();
+  await createGenreTable();
+  await createMoviesTable();
+  await createRatingTable();
+  await createMovieGenresTable();
 
   app.listen(process.env.PORT, () => {
     console.log(`server is runing on ${process.env.PORT} PORT`);

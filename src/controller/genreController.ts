@@ -1,10 +1,17 @@
-import { pool } from "../model/db/connetion";
+import {
+  deleteGenreService,
+  getGenresService,
+  getGenreService,
+  updateGenreService,
+  setGenreService,
+} from "../services/genre.service";
+
 import { Controller } from "../util/typs";
 
 export const getGenres: Controller = async (req, res) => {
   try {
-    const data = await pool.query(`SELECT * FROM Genres;`);
-    res.status(201).json(data.rows);
+    const data = await getGenresService();
+    res.status(201).json(data);
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);
@@ -16,10 +23,8 @@ export const getGenres: Controller = async (req, res) => {
 export const getGenre: Controller = async (req, res) => {
   try {
     const ID = req.params.id;
-    const data = await pool.query(`SELECT * FROM Genres WHERE Genreid = $1;`, [
-      ID,
-    ]);
-    res.status(201).json(data.rows);
+    const data = await getGenreService(ID);
+    res.status(201).json(data);
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);
@@ -32,15 +37,8 @@ export const updateGenre: Controller = async (req, res) => {
   try {
     const ID = req.params.id;
     const data = req.body;
-    const { genrename } = data;
-
-    const result = await pool.query(
-      `UPDATE Genres
-        SET genrename = $1
-        WHERE Genreid = $2 RETURNING *;`,
-      [genrename, ID]
-    );
-    res.status(201).json(result.rows);
+    const result = updateGenreService(ID, data);
+    res.status(201).json(result);
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);
@@ -52,10 +50,8 @@ export const updateGenre: Controller = async (req, res) => {
 export const deleteGenre: Controller = async (req, res) => {
   try {
     const ID = req.params.id;
-    const data = await pool.query(`DELETE FROM Genres WHERE Genreid = $1;`, [
-      ID,
-    ]);
-    res.status(201).json(data.rows);
+    const data = deleteGenreService(ID);
+    res.status(201).json(data);
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);
@@ -69,17 +65,8 @@ export const setGenre: Controller = async (req, res) => {
     const data = req.body;
     console.log(data);
 
-    const { genre } = data;
-
-    await pool.query(
-      `
-        INSERT INTO Genres (Genrename)
-        VALUES ($1);
-      `,
-      [genre]
-    );
-
-    res.status(201).json(data);
+    const result = setGenreService(data);
+    res.status(201).json(result);
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);

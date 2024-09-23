@@ -1,10 +1,16 @@
-import { pool } from "../model/db/connetion";
+import {
+  deleteActorService,
+  getActorService,
+  getActorsService,
+  setActorService,
+  updateActorService,
+} from "../services/actor.service";
 import { Controller } from "../util/typs";
 
 export const getActors: Controller = async (req, res) => {
   try {
-    const data = await pool.query(`SELECT * FROM actors;`);
-    res.status(201).send(data.rows);
+    const data = getActorsService();
+    res.status(201).send(data);
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);
@@ -16,10 +22,8 @@ export const getActors: Controller = async (req, res) => {
 export const getActor: Controller = async (req, res) => {
   try {
     const ID = req.params.id;
-    const data = await pool.query(`SELECT * FROM actors WHERE actorid = $1;`, [
-      ID,
-    ]);
-    res.status(201).json({ message: data.rows });
+    const data = await getActorService(ID);
+    res.status(201).json({ message: data });
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);
@@ -32,15 +36,8 @@ export const updateActor: Controller = async (req, res) => {
   try {
     const ID = req.params.id;
     const data = req.body;
-    const { name, nationality, DOB } = data;
-
-    const result = await pool.query(
-      `UPDATE actors
-    SET name = $1, nationality = $2, dob = $3
-    WHERE actorid = $4 RETURNING *;`,
-      [name, nationality, DOB, ID]
-    );
-    res.status(201).send(result.rows);
+    const result = await updateActorService(ID, data);
+    res.status(201).send(result);
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);
@@ -52,10 +49,8 @@ export const updateActor: Controller = async (req, res) => {
 export const deleteActor: Controller = async (req, res) => {
   try {
     const ID = req.params.id;
-    const data = await pool.query(`DELETE FROM actors WHERE actorid = $1;`, [
-      ID,
-    ]);
-    res.status(201).send(data.rows);
+    const data = await deleteActorService(ID);
+    res.status(201).send(data);
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);
@@ -67,19 +62,8 @@ export const deleteActor: Controller = async (req, res) => {
 export const setActor: Controller = async (req, res) => {
   try {
     const data = req.body;
-    console.log(data);
-
-    const { name, nationality, DOB } = data;
-
-    await pool.query(
-      `
-        INSERT INTO actors (Name, Nationality, DOB)
-        VALUES ($1, $2, $3);
-      `,
-      [name, nationality, DOB]
-    );
-
-    res.status(201).send(data);
+    const result = await setActorService(data);
+    res.status(201).send(result);
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);

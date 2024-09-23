@@ -1,10 +1,17 @@
 import { pool } from "../model/db/connetion";
+import {
+  deleteMovieService,
+  getMovieService,
+  getMoviesService,
+  setMovieService,
+  updateMovieService,
+} from "../services/movie.service";
 import { Controller } from "../util/typs";
 
 export const getMovies: Controller = async (req, res) => {
   try {
-    const data = await pool.query(`SELECT * FROM Movies;`);
-    res.status(201).json(data.rows);
+    const data = getMoviesService();
+    res.status(201).json(data);
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);
@@ -16,12 +23,8 @@ export const getMovies: Controller = async (req, res) => {
 export const getMovie: Controller = async (req, res) => {
   try {
     const ID = req.params.id;
-    const data = await pool.query(`SELECT * FROM Movies WHERE Movieid = $1;`, [
-      ID,
-    ]);
-    console.log(data);
-
-    res.status(201).json(data.rows);
+    const data = await getMovieService(ID);
+    res.status(201).json(data);
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);
@@ -34,15 +37,9 @@ export const updateMovie: Controller = async (req, res) => {
   try {
     const ID = req.params.id;
     const data = req.body;
-    const { title, releaseYear, directorid } = data;
+    const result = updateMovieService(data, ID);
 
-    const result = await pool.query(
-      `UPDATE Movies
-      SET title = $1, ReleaseYear = $2, DirectorID = $3
-      WHERE Movieid = $4 RETURNING *;`,
-      [title, releaseYear, directorid, ID]
-    );
-    res.status(201).json(result.rows);
+    res.status(201).json(result);
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);
@@ -54,10 +51,8 @@ export const updateMovie: Controller = async (req, res) => {
 export const deleteMovie: Controller = async (req, res) => {
   try {
     const ID = req.params.id;
-    const data = await pool.query(`DELETE FROM Movies WHERE Movieid = $1;`, [
-      ID,
-    ]);
-    res.status(201).json(data.rows);
+    const result = await deleteMovieService(ID);
+    res.status(201).json(result);
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);
@@ -71,17 +66,8 @@ export const setMovie: Controller = async (req, res) => {
     const data = req.body;
     console.log(data);
 
-    const { title, ReleaseYear, DirectorID } = data;
-
-    await pool.query(
-      `
-        INSERT INTO Movies (Title, ReleaseYear, DirectorID)
-        VALUES ($1, $2, $3);
-      `,
-      [title, ReleaseYear, DirectorID]
-    );
-
-    res.status(201).send(data);
+    const result = await setMovieService(data);
+    res.status(201).send(result);
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);

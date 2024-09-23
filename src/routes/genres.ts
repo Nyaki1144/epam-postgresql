@@ -5,7 +5,7 @@ import {
   updateGenre,
   deleteGenre,
   setGenre,
-} from "../controller/genereController";
+} from "../controller/genreController";
 
 const genresRout = Router();
 genresRout.use(express.json());

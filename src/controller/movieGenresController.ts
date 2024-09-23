@@ -1,14 +1,14 @@
-import { pool } from "../model/db/connetion";
+import {
+  deleteMovieGenresService,
+  setMovieGenresService,
+} from "../services/movieGenres.service";
 import { Controller } from "../util/typs";
 
 export const deleteMovieGenres: Controller = async (req, res) => {
   try {
     const ID = req.params.id;
-    const data = await pool.query(
-      `DELETE FROM moviegenres WHERE movieid = $1;`,
-      [ID]
-    );
-    res.status(200).json(data.rows);
+    const result = deleteMovieGenresService(ID);
+    res.status(200).json(result);
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);
@@ -20,19 +20,8 @@ export const deleteMovieGenres: Controller = async (req, res) => {
 export const setMovieGenres: Controller = async (req, res) => {
   try {
     const data = req.body;
-    console.log(data);
-
-    const { genreid, movieid } = data;
-
-    await pool.query(
-      `
-        INSERT INTO moviegenres (genreid, movieid)
-        VALUES ($1, $2);
-      `,
-      [genreid, movieid]
-    );
-
-    res.status(201).json(data);
+    const result = await setMovieGenresService(data);
+    res.status(201).json(result);
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);
