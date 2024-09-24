@@ -1,0 +1,17 @@
+export const genre = [
+  { genre: "Action" },
+  { genre: "Adventure" },
+  { genre: "Comedy" },
+  { genre: "Drama" },
+  { genre: "Horror" },
+  { genre: "Thriller" },
+  { genre: "Fantasy" },
+  { genre: "Sci-Fi" },
+  { genre: "Romance" },
+  { genre: "Mystery" },
+  { genre: "Documentary" },
+  { genre: "Biography" },
+  { genre: "Musical" },
+  { genre: "Western" },
+  { genre: "Animation" },
+];
